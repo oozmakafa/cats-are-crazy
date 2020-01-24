@@ -1,27 +1,43 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import { Link, withRouter } from 'react-router-dom';
 
 class CatDetail extends Component {
     state = {
-        cat: {}
-    }
-    componentDidMount(){
-        Axios.get(`https://api.thecatapi.com/v1/images/${this.props.id}`)
-        .then(res => {
-            const cat = res.data;
-            this.setState({cat});
-        })
+        cats : {
+            url: "",
+            breeds: [],
+            id: ""
+        }
     }
 
+    componentDidMount(){
+        // Kuhaa ang detalye sa iring
+        Axios.get(`https://api.thecatapi.com/v1/images/${this.props.match.params.id}`)
+        .then(res => {
+            const cats = {
+                url: res.data.url,
+                breeds: res.data.breeds[0],
+                id: res.data.id
+            }
+            this.setState({cats});
+        })
+    }
+    
     render() { 
-        console.log(this.state);
+        const {url, breeds, id} = this.state.cats;
         return (
             <div className="container">
                 <div className="card">
-                    <img src={this.state.cat.url} className="card-img-top" alt={this.state.cat.id} />
+                    <div className="card-header">
+                        <Link to={`/?breed=${breeds.id}`}><button className="btn btn-primary">Back</button></Link>
+                    </div>
+                    <img src={url} className="card-img-top" alt={id} />
                     <div className="card-body">
-                        <h4 className="card-title">Card title</h4>
-                        <h5>Origin Type:</h5>
+                        <h4 className="card-title">{breeds.name}</h4>
+                        <h5>Origin Type: {breeds.origin}</h5>
+                        <h6>{breeds.temperament}</h6>
+                        <p>{breeds.description}</p>
                     </div>
                 </div>
             </div>
@@ -29,4 +45,4 @@ class CatDetail extends Component {
     }
 }
  
-export default CatDetail;
+export default withRouter(CatDetail);
