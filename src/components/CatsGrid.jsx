@@ -50,6 +50,7 @@ class CatsGrid extends Component {
                             (cat, index) => {
                                 // Ipakita imong iring pero limit lang ha.
                                 if(index < this.state.length) return <CatsCard id={cat.id} image_url={cat.url} key={cat.id}/>
+                                return "";
                             }
                         )}
                 </div> 
